@@ -4,17 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบบันทึกเวลาทำงาน (Check-in System)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
+        /* สไตล์หลักและธีมพื้นหลัง */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Sarabun', sans-serif;
         }
 
         body {
-            background-color: #f0f2f5;
-            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #2c3e50;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -22,100 +27,148 @@
             padding: 20px;
         }
 
+        /* การ์ดฟอร์มหลัก */
         .container {
             background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             width: 100%;
-            max-width: 600px;
-            padding: 30px;
+            max-width: 650px;
+            padding: 40px;
+            border-top: 6px solid #1a73e8;
         }
 
+        /* ส่วนหัวข้อ */
         .header {
             text-align: center;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #eef0f3;
-            padding-bottom: 15px;
+            margin-bottom: 30px;
         }
 
         .header h2 {
             color: #1a73e8;
-            font-size: 24px;
+            font-size: 26px;
+            font-weight: 600;
             margin-bottom: 8px;
         }
 
         .header p {
-            color: #666;
+            color: #7f8c8d;
             font-size: 14px;
         }
 
+        /* เส้นแบ่งเซกชันฟอร์ม */
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a73e8;
+            margin: 25px 0 12px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed #e0e0e0;
+            text-transform: uppercase;
+        }
+        
+        .section-title:first-of-type {
+            margin-top: 0;
+        }
+
+        /* กล่องกรอกข้อมูล */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #444;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #34495e;
             font-size: 14px;
         }
 
         .form-control {
             width: 100%;
             padding: 12px 16px;
-            border: 1.5px solid #dadce0;
-            border-radius: 8px;
+            border: 1.5px solid #dcdde1;
+            border-radius: 10px;
             font-size: 15px;
-            transition: all 0.3s ease;
+            color: #2c3e50;
+            transition: all 0.25s ease;
             outline: none;
-            background-color: #fff;
+            background-color: #ffff;
         }
 
         .form-control:focus {
             border-color: #1a73e8;
             box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
+            background-color: #fff;
         }
 
+        /* ตกแต่งส่วน Select Dropdown */
         select.form-control {
             appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%237f8c8d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 16px center;
-            background-size: 16px;
+            background-size: 14px;
             padding-right: 40px;
         }
 
+        /* จัดแถวแบ่ง 2 คอลลัมน์ */
+        .row {
+            display: flex;
+            gap: 16px;
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        /* ปุ่มกดบันทึก */
         .btn-submit {
             width: 100%;
-            background-color: #1a73e8;
+            background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%);
             color: white;
             border: none;
-            padding: 14px;
+            padding: 15px;
             font-size: 16px;
             font-weight: 600;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.2s;
-            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.2);
+            transition: all 0.2s ease;
+            margin-top: 15px;
         }
 
         .btn-submit:hover {
-            background-color: #1557b0;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(26, 115, 232, 0.3);
+        }
+
+        .btn-submit:active {
+            transform: translateY(1px);
         }
 
         .btn-submit:disabled {
-            background-color: #ccc;
+            background: #bdc3c7;
+            box-shadow: none;
             cursor: not-allowed;
+            transform: none;
         }
 
+        /* กล่องแจ้งเตือนสถานะ */
         .status-message {
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 8px;
+            margin-top: 20px;
+            padding: 14px;
+            border-radius: 10px;
             text-align: center;
             font-size: 14px;
+            font-weight: 500;
             display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .status-success {
@@ -138,20 +191,36 @@
             border: 1px solid #d2e3fc;
             display: block;
         }
+
+        /* การแสดงผลบนมือถือ */
+        @media (max-width: 580px) {
+            .row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .container {
+                padding: 25px 20px;
+            }
+            .header h2 {
+                font-size: 22px;
+            }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <h2>ระบบเช็คชื่อและบันทึกเวลาทำงาน</h2>
-        <p>กรุณากรอกข้อมูลให้ครบถ้วนเพื่อบันทึกลง Google Sheets</p>
+        <h2>ระบบบันทึกเวลาทำงาน</h2>
+        <p>กรุณากรอกรายละเอียดเพื่อเช็คชื่อเข้า-ออกงาน</p>
     </div>
 
     <form id="attendanceForm">
+        <div class="section-title">ข้อมูลพนักงาน</div>
+        
         <div class="form-group">
             <label for="fullName">ชื่อ - นามสกุล</label>
-            <input type="text" id="fullName" name="fullName" class="form-control" placeholder="ตัวอย่าง: สมชาย ใจดี" required>
+            <input type="text" id="fullName" name="fullName" class="form-control" placeholder="กรอกชื่อและนามสกุลของคุณ" required>
         </div>
 
         <div class="form-group">
@@ -165,13 +234,15 @@
             </select>
         </div>
 
+        <div class="section-title">รายละเอียดงาน</div>
+
         <div class="form-group">
-            <label for="jobName">ชื่องาน / ตำแหน่ง / โปรเจกต์</label>
-            <input type="text" id="jobName" name="jobName" class="form-control" placeholder="ตัวอย่าง: พัฒนาเว็บไซต์ / ตรวจสอบเอกสาร" required>
+            <label for="jobName">ชื่องาน / โปรเจกต์ที่ปฏิบัติ</label>
+            <input type="text" id="jobName" name="jobName" class="form-control" placeholder="ตัวอย่าง: พัฒนาเว็บไซต์ / งานเอกสาร" required>
         </div>
 
         <div class="form-group">
-            <label for="workLocation">สถานที่ทำงาน</label>
+            <label for="workLocation">สถานที่ปฏิบัติงาน</label>
             <select id="workLocation" name="workLocation" class="form-control" required>
                 <option value="" disabled selected>เลือกสถานที่ทำงาน</option>
                 <option value="สำนักงานใหญ่ (HQ)">สำนักงานใหญ่ (HQ)</option>
@@ -181,24 +252,31 @@
             </select>
         </div>
 
-        <div class="form-group">
-            <label for="checkInTime">วัน เวลาที่เข้างาน (กดเพื่อเลือกจากปฏิทินและเวลา)</label>
-            <input type="datetime-local" id="checkInTime" name="checkInTime" class="form-control" required>
+        <div class="section-title">บันทึกเวลาทำงาน</div>
+
+        <div class="row">
+            <div class="col font-group">
+                <div class="form-group">
+                    <label for="checkInTime">วัน เวลาที่เข้างาน</label>
+                    <input type="datetime-local" id="checkInTime" name="checkInTime" class="form-control" required>
+                </div>
+            </div>
+            <div class="col font-group">
+                <div class="form-group">
+                    <label for="checkOutTime">วัน เวลาที่ออกงาน</label>
+                    <input type="datetime-local" id="checkOutTime" name="checkOutTime" class="form-control" required>
+                </div>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="checkOutTime">วัน เวลาที่ออกงาน (กดเพื่อเลือกจากปฏิทินและเวลา)</label>
-            <input type="datetime-local" id="checkOutTime" name="checkOutTime" class="form-control" required>
-        </div>
-
-        <button type="submit" class="btn-submit" id="submitBtn">บันทึกข้อมูล</button>
+        <button type="submit" class="btn-submit" id="submitBtn">✨ บันทึกข้อมูลเข้าตาราง</button>
     </form>
 
     <div id="statusBox" class="status-message"></div>
 </div>
 
 <script>
-    // ตั้งเวลาปัจจุบันเป็นตัวเลือกเริ่มต้นเพื่อให้กดเลื้อง่ายขึ้น
+    // ตั้งค่าวันเวลาปัจจุบันเริ่มต้น
     window.addEventListener('DOMContentLoaded', () => {
         const now = new Date();
         const tzoffset = now.getTimezoneOffset() * 60000; 
@@ -212,20 +290,20 @@
     const statusBox = document.getElementById('statusBox');
     const submitBtn = document.getElementById('submitBtn');
 
-    // ลิงก์ Web App URL ของคุณที่ใส่ไว้เรียบร้อยแล้ว
+    // ลิงก์ Web App URL ปัจจุบันของคุณ
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz941b4M4UJfvnCF0WmCcRUZnh4b70f0MR7INKmrRQLCPkxafVuAD9wcPyAzcoAdsz9MA/exec";
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        showStatus("กำลังบันทึกข้อมูล กรุณารอสักครู่...", "loading");
+        showStatus("⏳ กำลังบันทึกข้อมูลเข้า Google Sheet กรุณารอสักครู่...", "loading");
         submitBtn.disabled = true;
 
         const formData = new FormData(form);
         const data = {};
         formData.forEach((value, key) => {
             if (key === 'checkInTime' || key === 'checkOutTime') {
-                data[key] = value.replace('T', ' '); // เปลี่ยนตัว T เป็นเว้นวรรคให้อ่านง่ายบน Sheet
+                data[key] = value.replace('T', ' '); 
             } else {
                 data[key] = value;
             }
@@ -241,11 +319,10 @@
             body: JSON.stringify(data)
         })
         .then(response => {
-            showStatus("บันทึกข้อมูลลง Google Sheet สำเร็จเรียบร้อยแล้ว!", "success");
+            showStatus("🎉 บันทึกข้อมูลสำเร็จเรียบร้อยแล้ว!", "success");
             form.reset();
             submitBtn.disabled = false;
             
-            // ตั้งค่าเวลาใหม่หลังจากรีเซ็ตฟอร์มสำเร็จ
             const now = new Date();
             const tzoffset = now.getTimezoneOffset() * 60000;
             const localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, 16);
@@ -254,7 +331,7 @@
         })
         .catch(error => {
             console.error('Error:', error);
-            showStatus("เกิดข้อผิดพลาดไม่สามารถบันทึกข้อมูลได้: " + error.message, "error");
+            showStatus("❌ เกิดข้อผิดพลาด: " + error.message, "error");
             submitBtn.disabled = false;
         });
     });
