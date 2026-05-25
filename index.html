@@ -275,6 +275,109 @@
             color: #2f3542;
         }
 
+        /* 🌙 หน้าต่างป็อปอัพพิเศษ ธีมท้องฟ้าดวงดาวราตรีบอกฝันดีจากบอสเอส */
+        .sleep-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+            overflow: hidden;
+        }
+
+        .sleep-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* เอฟเฟกต์ดวงดาววิ่งระยิบระยับ */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            animation: starMovement 30s linear infinite;
+        }
+
+        @keyframes starMovement {
+            from { background-position: 0 0, 40px 60px, 130px 270px; }
+            to { background-position: 550px 550px, 390px 410px, 680px 820px; }
+        }
+
+        .sleep-box {
+            text-align: center;
+            color: #ffffff;
+            z-index: 3100;
+            transform: scale(0.8);
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .sleep-overlay.active .sleep-box {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .sleep-emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: floatingSleep 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatingSleep {
+            from { transform: translateY(0) rotate(0deg); }
+            to { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        .sleep-box h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            letter-spacing: 1px;
+        }
+
+        .sleep-box p {
+            color: #a4b0be;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .btn-wakeup {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .btn-wakeup:hover {
+            background-color: #ffffff;
+            color: #090a0f;
+            box-shadow: 0 0 15px rgba(255,255,255,0.4);
+        }
+
         /* แถบหลอดดาวน์โหลดเด้งดึ๋งด้านบนสุด (Progress Loading Bar) */
         .loading-line {
             position: fixed;
@@ -369,6 +472,16 @@
     </div>
 </div>
 
+<div class="sleep-overlay" id="sleepOverlay">
+    <div class="stars"></div>
+    <div class="sleep-box">
+        <div class="sleep-emoji">✨🛌💤</div>
+        <h1>ฝันดีคับอิอิจากบอสเอส</h1>
+        <p>ระบบบันทึกเวลาทำงานเรียบร้อยแล้ว พักผ่อนได้เลยครับคุณพนักงาน</p>
+        <button class="btn-wakeup" id="btnWakeup">ตื่นกลับมาหน้าเว็บ</button>
+    </div>
+</div>
+
 <script>
     // ตั้งค่าเวลาเป็นปัจจุบันเริ่มต้น
     function setInitialTime() {
@@ -382,12 +495,52 @@
 
     window.addEventListener('DOMContentLoaded', setInitialTime);
 
+    // ฟังก์ชันพิเศษ: บังคับแปลงค่า datetime-local เป็นรูปแบบ 24 ชั่วโมง "ปปปป-ดด-วว ชช:นน น."
+    function convertTo24HourFormat(datetimeLocalValue) {
+        if (!datetimeLocalValue) return "";
+        const [datePart, timePart] = datetimeLocalValue.split('T');
+        if (!timePart) return datePart;
+        return `${datePart} ${timePart} น.`;
+    }
+
+    // ฟังก์ชันคำนวณระยะเวลาทั้งหมด (ส่งเข้าคอลัมน์ G และ H)
+    function calculateWorkDuration(checkInStr, checkOutStr) {
+        if (!checkInStr || !checkOutStr) return { g: "", h: "" };
+        
+        const d1 = new Date(checkInStr);
+        const d2 = new Date(checkOutStr);
+        const diffMs = d2 - d1;
+        
+        if (isNaN(diffMs) || diffMs < 0) return { g: "0 ชั่วโมง", h: "0 ชั่วโมง" };
+        
+        const totalSeconds = Math.floor(diffMs / 1000);
+        const totalHours = totalSeconds / 3600;
+        
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        
+        // จัดรูปแบบคอลัมน์ G (เช่น 7.5 ชั่วโมง)
+        const g_value = totalHours % 1 !== 0 ? totalHours.toFixed(1) + " ชั่วโมง" : Math.floor(totalHours) + " ชั่วโมง";
+        
+        // จัดรูปแบบคอลัมน์ H (เช่น 7 ชั่วโมง 30 นาที)
+        let h_value = "";
+        if (hours > 0) {
+            h_value = hours + " ชั่วโมง" + (minutes > 0 ? " " + minutes + " นาที" : "");
+        } else {
+            h_value = minutes + " นาที";
+        }
+        
+        return { g: g_value, h: h_value };
+    }
+
     const form = document.getElementById('attendanceForm');
     const submitBtn = document.getElementById('submitBtn');
     const loadingLine = document.getElementById('loadingLine');
     const modalOverlay = document.getElementById('modalOverlay');
+    const sleepOverlay = document.getElementById('sleepOverlay');
     const btnYes = document.getElementById('btnYes');
     const btnNo = document.getElementById('btnNo');
+    const btnWakeup = document.getElementById('btnWakeup');
 
     // ลิงก์ยิงเข้าสู่ Google Apps Script ของคุณ
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz941b4M4UJfvnCF0WmCcRUZnh4b70f0MR7INKmrRQLCPkxafVuAD9wcPyAzcoAdsz9MA/exec";
@@ -395,20 +548,28 @@
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        // รันอนิเมชั่นแถบดาวน์โหลดด้านบนแบบสมูท
         loadingLine.style.width = '75%';
         submitBtn.disabled = true;
         submitBtn.textContent = "⏳ กำลังบันทึกข้อมูล...";
+
+        // ดึงค่าเวลาดิบไปใช้คำนวณคอลัมน์ G และ H ก่อนแปลงฟอร์แมต
+        const rawCheckIn = document.getElementById('checkInTime').value;
+        const rawCheckOut = document.getElementById('checkOutTime').value;
+        const duration = calculateWorkDuration(rawCheckIn, rawCheckOut);
 
         const formData = new FormData(form);
         const data = {};
         formData.forEach((value, key) => {
             if (key === 'checkInTime' || key === 'checkOutTime') {
-                data[key] = value.replace('T', ' '); 
+                data[key] = convertTo24HourFormat(value); 
             } else {
                 data[key] = value;
             }
         });
+
+        // แทรกค่าความต่างชั่วโมงทำงานลง Object ส่งไปให้ Google Apps Script รับลงช่องคอลัมน์ G และ H
+        data['workDurationDecimal'] = duration.g; // ตัวแปรคอลัมน์ G
+        data['workDurationText'] = duration.h;    // ตัวแปรคอลัมน์ H
 
         fetch(WEB_APP_URL, {
             method: 'POST',
@@ -420,14 +581,12 @@
             body: JSON.stringify(data)
         })
         .then(response => {
-            // บันทึกสำเร็จ วิ่งเต็มหลอดแล้วซ่อนตัว
             loadingLine.style.width = '100%';
             setTimeout(() => { loadingLine.style.width = '0'; }, 350);
 
             submitBtn.disabled = false;
             submitBtn.textContent = "🚀 บันทึก";
 
-            // เปิดใช้งาน Pop-up สวยๆ ขึ้นมาถามทันที
             modalOverlay.classList.add('active');
         })
         .catch(error => {
@@ -439,29 +598,27 @@
         });
     });
 
-    // เงื่อนไขปุ่ม "เจ๋งไปเลย" -> คืนค่าเดิมยกเว้นชื่อและประเภทพนักงาน
+    // ปุ่ม "เจ๋งไปเลย" -> ลบเฉพาะชื่อนามสกุล นอกนั้นคงไว้ทั้งหมดตามข้อ 1
     btnYes.addEventListener('click', function() {
         modalOverlay.classList.remove('active');
         
-        // 1. จำค่าเดิมของ ชื่อ และ ประเภทพนักงาน เอาไว้ก่อนเคลียร์
-        const currentName = document.getElementById('fullName').value;
-        const currentType = document.getElementById('employeeType').value;
-
-        // 2. เคลียร์ฟอร์มส่วนที่เหลือทั้งหมด
-        form.reset();
-
-        // 3. ใส่ชื่อและประเภทพนักงานเดิมกลับเข้าช่องเดิมทันที
-        document.getElementById('fullName').value = currentName;
-        document.getElementById('employeeType').value = currentType;
-
-        // 4. รีเฟรชวันเวลาเป็นปัจจุบันในช่อง เพื่อความสะดวกในการกรอกงานถัดไป
-        setInitialTime();
+        // ล้างเฉพาะชื่อพนักงานช่องเดียวเท่านั้น
+        document.getElementById('fullName').value = "";
+        
+        // ชิ้นส่วนอื่นคงค่าเดิมไว้ ไม่ต้องกวนระบบฟอร์มรีเซ็ต!
     });
 
-    // เงื่อนไขปุ่ม "กลับบ้านนอนดีกว่า" -> ยิง Alert บอสเอสขึ้นมา
+    // ปุ่ม "กลับบ้านนอนดีกว่า" -> เปิดหน้าต่างสลีปดวงดาวอวกาศฉบับเคลื่อนไหวตามข้อ 3
     btnNo.addEventListener('click', function() {
         modalOverlay.classList.remove('active');
-        alert("ฝันดีคับอิอิจากบอสเอส");
+        sleepOverlay.classList.add('active');
+    });
+
+    // ปุ่มสำหรับปลุกกลับมาหน้าเว็บปกติจากหน้าบอกฝันดี
+    btnWakeup.addEventListener('click', function() {
+        sleepOverlay.classList.remove('active');
+        form.reset();
+        setInitialTime();
     });
 </script>
 </body>
