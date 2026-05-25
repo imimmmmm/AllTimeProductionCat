@@ -6,47 +6,68 @@
     <title>ระบบบันทึกเวลาทำงาน (Check-in System)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        /* สไตล์หลักและธีมพื้นหลัง */
+        /* อนิเมชั่นพื้นหลังไล่สีขยับได้สไตล์ Instagram */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Sarabun', sans-serif;
+            font-family: 'Prompt', sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            background-size: 400% 400%;
+            animation: instagramGradient 12s ease infinite;
             color: #2c3e50;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            overflow-x: hidden;
         }
 
-        /* การ์ดฟอร์มหลัก */
+        @keyframes instagramGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* การ์ดหน้าต่างโปรเจกต์พร้อมอนิเมชั่นเด้งเข้าแบบสมูท (Professional Motion) */
         .container {
-            background-color: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            background-color: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
             width: 100%;
-            max-width: 650px;
+            max-width: 620px;
             padding: 40px;
-            border-top: 6px solid #1a73e8;
+            transform: translateY(40px);
+            opacity: 0;
+            animation: cardEntrance 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
-        /* ส่วนหัวข้อ */
+        @keyframes cardEntrance {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ตกแต่งหัวข้อเว็บ */
         .header {
             text-align: center;
             margin-bottom: 30px;
         }
 
         .header h2 {
-            color: #1a73e8;
-            font-size: 26px;
+            background: linear-gradient(45deg, #dc2743, #bc1888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 28px;
             font-weight: 600;
             margin-bottom: 8px;
         }
@@ -56,22 +77,21 @@
             font-size: 14px;
         }
 
-        /* เส้นแบ่งเซกชันฟอร์ม */
+        /* เส้นปะตัดแบ่งโซนการกรอก */
         .section-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
-            color: #1a73e8;
+            color: #cc2366;
             margin: 25px 0 12px 0;
-            padding-bottom: 5px;
-            border-bottom: 1px dashed #e0e0e0;
-            text-transform: uppercase;
+            padding-bottom: 6px;
+            border-bottom: 2px dashed #f1f2f6;
+            letter-spacing: 0.5px;
         }
         
         .section-title:first-of-type {
             margin-top: 0;
         }
 
-        /* กล่องกรอกข้อมูล */
         .form-group {
             margin-bottom: 18px;
         }
@@ -80,29 +100,29 @@
             display: block;
             margin-bottom: 6px;
             font-weight: 500;
-            color: #34495e;
+            color: #4a4a4a;
             font-size: 14px;
         }
 
+        /* ออกแบบช่อง Input ให้นุ่มนวลเวลาคลิก */
         .form-control {
             width: 100%;
-            padding: 12px 16px;
-            border: 1.5px solid #dcdde1;
-            border-radius: 10px;
+            padding: 13px 16px;
+            border: 2px solid #eef0f3;
+            border-radius: 12px;
             font-size: 15px;
             color: #2c3e50;
-            transition: all 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             outline: none;
-            background-color: #ffff;
+            background-color: #ffffff;
         }
 
         .form-control:focus {
-            border-color: #1a73e8;
-            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
+            border-color: #dc2743;
+            box-shadow: 0 0 0 4px rgba(220, 39, 67, 0.12);
             background-color: #fff;
         }
 
-        /* ตกแต่งส่วน Select Dropdown */
         select.form-control {
             appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%237f8c8d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
@@ -112,7 +132,6 @@
             padding-right: 40px;
         }
 
-        /* จัดแถวแบ่ง 2 คอลลัมน์ */
         .row {
             display: flex;
             gap: 16px;
@@ -122,25 +141,27 @@
             flex: 1;
         }
 
-        /* ปุ่มกดบันทึก */
+        /* ปุ่มบันทึกแบบไล่เฉดสี Instagram ชนิดเลื่อนเอฟเฟกต์เวลา Hover */
         .btn-submit {
             width: 100%;
-            background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%);
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366);
+            background-size: 200% 100%;
             color: white;
             border: none;
             padding: 15px;
             font-size: 16px;
             font-weight: 600;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.2);
-            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(220, 39, 67, 0.25);
+            transition: all 0.4s ease;
             margin-top: 15px;
         }
 
         .btn-submit:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(26, 115, 232, 0.3);
+            background-position: 100% 0;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 39, 67, 0.35);
         }
 
         .btn-submit:active {
@@ -154,60 +175,128 @@
             transform: none;
         }
 
-        /* กล่องแจ้งเตือนสถานะ */
-        .status-message {
-            margin-top: 20px;
-            padding: 14px;
-            border-radius: 10px;
+        /* ระบบหน้าต่างป็อปอัพคำถามหลังบันทึก (Custom Modal) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(6px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background-color: #ffffff;
+            padding: 35px;
+            border-radius: 24px;
+            max-width: 460px;
+            width: 90%;
             text-align: center;
-            font-size: 14px;
-            font-weight: 500;
-            display: none;
-            animation: fadeIn 0.3s ease;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+            transform: scale(0.7);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
         }
 
-        .status-success {
-            background-color: #e6f4ea;
-            color: #137333;
-            border: 1px solid #ceead6;
-            display: block;
+        .modal-icon {
+            font-size: 55px;
+            margin-bottom: 12px;
+            animation: bounceIcon 1s infinite alternate cubic-bezier(0.455, 0.03, 0.515, 0.955);
         }
 
-        .status-error {
-            background-color: #fce8e6;
-            color: #c5221f;
-            border: 1px solid #fad2cf;
-            display: block;
+        @keyframes bounceIcon {
+            from { transform: translateY(0); }
+            to { transform: translateY(-8px); }
         }
 
-        .status-loading {
-            background-color: #e8f0fe;
-            color: #1a73e8;
-            border: 1px solid #d2e3fc;
-            display: block;
+        .modal-box h3 {
+            color: #2c3e50;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: 600;
         }
 
-        /* การแสดงผลบนมือถือ */
+        .modal-box p {
+            color: #7f8c8d;
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 14px;
+        }
+
+        .btn-modal {
+            flex: 1;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-yes {
+            background: linear-gradient(45deg, #e6683c, #dc2743);
+            color: white;
+            box-shadow: 0 4px 12px rgba(220, 39, 67, 0.2);
+        }
+
+        .btn-yes:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(220, 39, 67, 0.3);
+        }
+
+        .btn-no {
+            background-color: #f1f2f6;
+            color: #57606f;
+        }
+
+        .btn-no:hover {
+            background-color: #e4e7eb;
+            color: #2f3542;
+        }
+
+        /* แถบหลอดดาวน์โหลดเด้งดึ๋งด้านบนสุด (Progress Loading Bar) */
+        .loading-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(to right, #f09433, #e6683c, #dc2743, #cc2366);
+            width: 0;
+            z-index: 2000;
+            transition: width 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+
         @media (max-width: 580px) {
-            .row {
-                flex-direction: column;
-                gap: 0;
-            }
-            .container {
-                padding: 25px 20px;
-            }
-            .header h2 {
-                font-size: 22px;
-            }
+            .row { flex-direction: column; gap: 0; }
+            .container { padding: 30px 20px; }
+            .modal-buttons { flex-direction: column; gap: 10px; }
         }
     </style>
 </head>
 <body>
+
+<div class="loading-line" id="loadingLine"></div>
 
 <div class="container">
     <div class="header">
@@ -227,10 +316,11 @@
             <label for="employeeType">ประเภทพนักงาน</label>
             <select id="employeeType" name="employeeType" class="form-control" required>
                 <option value="" disabled selected>เลือกประเภทพนักงาน</option>
-                <option value="พนักงานประจำ (Full-time)">พนักงานประจำ (Full-time)</option>
-                <option value="พนักงานพาร์ทไทม์ (Part-time)">พนักงานพาร์ทไทม์ (Part-time)</option>
-                <option value="พนักงานสัญญาจ้าง (Contract)">พนักงานสัญญาจ้าง (Contract)</option>
-                <option value="นักศึกษาฝึกงาน (Intern)">นักศึกษาฝึกงาน (Intern)</option>
+                <option value="ทีมดี">ทีมดี</option>
+                <option value="ทีมเฮียเอกซ์">ทีมเฮียเอกซ์</option>
+                <option value="ทีมโพดต้ม">ทีมโพดต้ม</option>
+                <option value="ฟรีแลนซ์">ฟรีแลนซ์</option>
+                <option value="พนักงาน All Time">พนักงาน All Time</option>
             </select>
         </div>
 
@@ -242,26 +332,20 @@
         </div>
 
         <div class="form-group">
-            <label for="workLocation">สถานที่ปฏิบัติงาน</label>
-            <select id="workLocation" name="workLocation" class="form-control" required>
-                <option value="" disabled selected>เลือกสถานที่ทำงาน</option>
-                <option value="สำนักงานใหญ่ (HQ)">สำนักงานใหญ่ (HQ)</option>
-                <option value="ทำงานจากบ้าน (WFH)">ทำงานจากบ้าน (WFH)</option>
-                <option value="ปฏิบัติงานนอกสถานที่ (On-site)">ปฏิบัติงานนอกสถานที่ (On-site)</option>
-                <option value="สาขาย่อย">สาขาย่อย</option>
-            </select>
+            <label for="workLocation">สถานที่ปฏิบัติงาน (พิมพ์ระบุ)</label>
+            <input type="text" id="workLocation" name="workLocation" class="form-control" placeholder="พิมพ์ระบุสถานที่ทำงานของคุณ เช่น ออฟฟิศ, หน้างาน, WFH" required>
         </div>
 
         <div class="section-title">บันทึกเวลาทำงาน</div>
 
         <div class="row">
-            <div class="col font-group">
+            <div class="col">
                 <div class="form-group">
                     <label for="checkInTime">วัน เวลาที่เข้างาน</label>
                     <input type="datetime-local" id="checkInTime" name="checkInTime" class="form-control" required>
                 </div>
             </div>
-            <div class="col font-group">
+            <div class="col">
                 <div class="form-group">
                     <label for="checkOutTime">วัน เวลาที่ออกงาน</label>
                     <input type="datetime-local" id="checkOutTime" name="checkOutTime" class="form-control" required>
@@ -269,35 +353,52 @@
             </div>
         </div>
 
-        <button type="submit" class="btn-submit" id="submitBtn">✨ บันทึกข้อมูลเข้าตาราง</button>
+        <button type="submit" class="btn-submit" id="submitBtn">🚀 บันทึก</button>
     </form>
+</div>
 
-    <div id="statusBox" class="status-message"></div>
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+        <div class="modal-icon">🎉</div>
+        <h3>บันทึกเสร็จสิ้น!</h3>
+        <p>ต้องการบันทึกข้อมูลของพนักงานคนอื่นต่อหรือไม่?</p>
+        <div class="modal-buttons">
+            <button class="btn-modal btn-yes" id="btnYes">✨ เจ๋งไปเลย</button>
+            <button class="btn-modal btn-no" id="btnNo">🛌 กลับบ้านนอนดีกว่า</button>
+        </div>
+    </div>
 </div>
 
 <script>
-    // ตั้งค่าวันเวลาปัจจุบันเริ่มต้น
-    window.addEventListener('DOMContentLoaded', () => {
+    // ตั้งค่าเวลาเป็นปัจจุบันเริ่มต้น
+    function setInitialTime() {
         const now = new Date();
         const tzoffset = now.getTimezoneOffset() * 60000; 
         const localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, 16);
         
         document.getElementById('checkInTime').value = localISOTime;
         document.getElementById('checkOutTime').value = localISOTime;
-    });
+    }
+
+    window.addEventListener('DOMContentLoaded', setInitialTime);
 
     const form = document.getElementById('attendanceForm');
-    const statusBox = document.getElementById('statusBox');
     const submitBtn = document.getElementById('submitBtn');
+    const loadingLine = document.getElementById('loadingLine');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const btnYes = document.getElementById('btnYes');
+    const btnNo = document.getElementById('btnNo');
 
-    // ลิงก์ Web App URL ปัจจุบันของคุณ
+    // ลิงก์ยิงเข้าสู่ Google Apps Script ของคุณ
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz941b4M4UJfvnCF0WmCcRUZnh4b70f0MR7INKmrRQLCPkxafVuAD9wcPyAzcoAdsz9MA/exec";
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        showStatus("⏳ กำลังบันทึกข้อมูลเข้า Google Sheet กรุณารอสักครู่...", "loading");
+        // รันอนิเมชั่นแถบดาวน์โหลดด้านบนแบบสมูท
+        loadingLine.style.width = '75%';
         submitBtn.disabled = true;
+        submitBtn.textContent = "⏳ กำลังบันทึกข้อมูล...";
 
         const formData = new FormData(form);
         const data = {};
@@ -319,35 +420,49 @@
             body: JSON.stringify(data)
         })
         .then(response => {
-            showStatus("🎉 บันทึกข้อมูลสำเร็จเรียบร้อยแล้ว!", "success");
-            form.reset();
+            // บันทึกสำเร็จ วิ่งเต็มหลอดแล้วซ่อนตัว
+            loadingLine.style.width = '100%';
+            setTimeout(() => { loadingLine.style.width = '0'; }, 350);
+
             submitBtn.disabled = false;
-            
-            const now = new Date();
-            const tzoffset = now.getTimezoneOffset() * 60000;
-            const localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, 16);
-            document.getElementById('checkInTime').value = localISOTime;
-            document.getElementById('checkOutTime').value = localISOTime;
+            submitBtn.textContent = "🚀 บันทึก";
+
+            // เปิดใช้งาน Pop-up สวยๆ ขึ้นมาถามทันที
+            modalOverlay.classList.add('active');
         })
         .catch(error => {
             console.error('Error:', error);
-            showStatus("❌ เกิดข้อผิดพลาด: " + error.message, "error");
+            alert("ระบบขัดข้องบางประการ กรุณากดบันทึกใหม่อีกครั้ง");
+            loadingLine.style.width = '0';
             submitBtn.disabled = false;
+            submitBtn.textContent = "🚀 บันทึก";
         });
     });
 
-    function showStatus(message, type) {
-        statusBox.textContent = message;
-        statusBox.className = "status-message"; 
+    // เงื่อนไขปุ่ม "เจ๋งไปเลย" -> คืนค่าเดิมยกเว้นชื่อและประเภทพนักงาน
+    btnYes.addEventListener('click', function() {
+        modalOverlay.classList.remove('active');
         
-        if (type === "success") {
-            statusBox.classList.add("status-success");
-        } else if (type === "error") {
-            statusBox.classList.add("status-error");
-        } else if (type === "loading") {
-            statusBox.classList.add("status-loading");
-        }
-    }
+        // 1. จำค่าเดิมของ ชื่อ และ ประเภทพนักงาน เอาไว้ก่อนเคลียร์
+        const currentName = document.getElementById('fullName').value;
+        const currentType = document.getElementById('employeeType').value;
+
+        // 2. เคลียร์ฟอร์มส่วนที่เหลือทั้งหมด
+        form.reset();
+
+        // 3. ใส่ชื่อและประเภทพนักงานเดิมกลับเข้าช่องเดิมทันที
+        document.getElementById('fullName').value = currentName;
+        document.getElementById('employeeType').value = currentType;
+
+        // 4. รีเฟรชวันเวลาเป็นปัจจุบันในช่อง เพื่อความสะดวกในการกรอกงานถัดไป
+        setInitialTime();
+    });
+
+    // เงื่อนไขปุ่ม "กลับบ้านนอนดีกว่า" -> ยิง Alert บอสเอสขึ้นมา
+    btnNo.addEventListener('click', function() {
+        modalOverlay.classList.remove('active');
+        alert("ฝันดีคับอิอิจากบอสเอส");
+    });
 </script>
 </body>
 </html>
